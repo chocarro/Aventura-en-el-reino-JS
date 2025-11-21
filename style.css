@@ -1,0 +1,301 @@
+/* ------------------------------------------------ */
+/* PALETA DE COLORES FANTASÍA */
+/* ------------------------------------------------ */
+/* -- Azul Oscuro (Fondo Principal): #0e1a3d */
+/* -- Dorado/Amarillo (Acento/Botones): #ffc300 */
+/* -- Marrón/Azul Medio (Contenedores): #2a3a5a */
+/* -- Blanco/Claro (Texto Principal): #f0f4f8 */
+/* ------------------------------------------------ */
+
+/* ------------------------------------------------ */
+/* BASES Y REINICIO */
+/* ------------------------------------------------ */
+
+body {
+    font-family: 'Georgia', serif; /* Tipo de letra con toque clásico/fantasía */
+    background-color: #0e1a3d; /* Fondo principal: Azul Oscuro Místico */
+    color: #f0f4f8; /* Texto principal: Blanco Fantasía */
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+#game-container {
+    width: 90%;
+    max-width: 800px;
+    background-color: #2a3a5a; /* Fondo principal del juego: Azul Medio Oscuro */
+    border: 3px solid #ffc300; /* Borde Dorado */
+    box-shadow: 0 0 30px rgba(255, 195, 0, 0.4), 0 0 10px rgba(0, 0, 0, 0.8);
+    padding: 25px;
+    border-radius: 10px;
+}
+
+/* Títulos de escenas */
+h3 {
+    text-align: center;
+    color: #ffc300; /* Dorado para títulos */
+    background-color: #0e1a3d;
+    padding: 15px;
+    margin-top: 0;
+    margin-bottom: 30px;
+    border-radius: 5px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* ------------------------------------------------ */
+/* GESTIÓN DE ESCENAS (REQUISITO PRINCIPAL) */
+/* ------------------------------------------------ */
+
+.game-scene {
+    min-height: 500px; 
+    padding: 10px;
+    display: none; 
+}
+
+.active-scene {
+    display: block;
+}
+
+.hidden-scene {
+    display: none;
+}
+
+/* ------------------------------------------------ */
+/* ELEMENTOS DE LA UI (BOTONES, CUADRÍCULAS) */
+/* ------------------------------------------------ */
+
+.btn-continue, #btn-restart, .btn-fight-enemy, .btn-add-item {
+    display: block;
+    width: 200px;
+    margin: 20px auto;
+    padding: 12px 20px;
+    background-color: #ffc300; /* Color Dorado */
+    color: #0e1a3d;
+    border: 2px solid #ffc300;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px #c99c00; /* Sombra para efecto 3D/presión */
+}
+
+.btn-continue:hover, #btn-restart:hover, .btn-fight-enemy:hover, .btn-add-item:hover {
+    background-color: #f7b700;
+    box-shadow: 0 2px #c99c00;
+    transform: translateY(2px);
+}
+
+
+/* ------------------------------------------------ */
+/* ESCENA 1 Y 3: TARJETA DEL JUGADOR Y ESTADÍSTICAS */
+/* ------------------------------------------------ */
+
+#player-card-initial, #player-card-updated {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    background-color: rgba(14, 26, 61, 0.5); /* Fondo semitransparente */
+    border-radius: 8px;
+}
+
+#player-avatar-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%; /* Avatar redondo */
+    border: 3px solid #ffc300;
+    margin-bottom: 15px;
+    object-fit: cover;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    width: 100%;
+    max-width: 450px;
+    margin-top: 25px;
+}
+
+.stat-box {
+    background-color: #0e1a3d; /* Color azul oscuro profundo */
+    color: #f0f4f8; 
+    padding: 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: inset 0 0 10px rgba(255, 195, 0, 0.3); /* Brillo interior */
+    border: 1px solid #ffc300;
+}
+
+/* ------------------------------------------------ */
+/* ESCENA 2: MERCADO Y CESTA */
+/* ------------------------------------------------ */
+
+.market-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    padding: 10px;
+}
+
+.product-item {
+    background-color: #f0f4f8; /* Fondo claro para contraste de ítem */
+    color: #0e1a3d;
+    padding: 15px;
+    text-align: center;
+    border-radius: 5px;
+    border: 2px solid #ffc300;
+    transition: background-color 0.3s;
+}
+
+.product-item img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    margin-bottom: 10px;
+}
+
+/* Cesta de Compra */
+.cart-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr); 
+    height: 70px;
+    border: 2px solid #ffc300;
+    margin-top: 15px;
+    background-color: #0e1a3d;
+}
+
+.cart-slot {
+    border: 1px solid #2a3a5a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cart-slot img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+}
+
+/* Estilos de interacción del Mercado (requisito funcional) */
+.product-selected {
+    background-color: #2a3a5a; /* Cambia a azul medio al seleccionar */
+    color: #f0f4f8;
+    border: 2px solid #00fff7; /* Borde de selección llamativo (Cian) */
+}
+
+
+/* ------------------------------------------------ */
+/* ESCENA 4: ENEMIGOS */
+/* ------------------------------------------------ */
+
+.enemies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    padding: 10px;
+}
+
+.enemy-item {
+    background-color: #2a3a5a;
+    color: #f0f4f8;
+    padding: 15px;
+    text-align: center;
+    border-radius: 5px;
+    border: 2px solid #ffc300;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.enemy-item:hover {
+    transform: scale(1.05);
+}
+
+.enemy-item img {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+}
+
+/* ------------------------------------------------ */
+/* ESCENA 5: BATALLAS */
+/* ------------------------------------------------ */
+
+.battle-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+}
+
+.combatants-info {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.combat-avatar {
+    width: 150px;
+    height: 150px;
+    border: 4px solid #ffc300;
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+.vs-text {
+    font-size: 2em;
+    font-weight: bold;
+    color: #ffc300;
+    margin: 0 20px;
+    text-shadow: 0 0 5px #ffc300;
+}
+
+.combat-log {
+    background-color: #0e1a3d;
+    color: #f0f4f8;
+    padding: 15px;
+    border-radius: 5px;
+    width: 80%;
+    text-align: left;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ffc300;
+    box-shadow: inset 0 0 5px rgba(255, 195, 0, 0.5);
+}
+
+/* ------------------------------------------------ */
+/* ESCENA 6: RESULTADO FINAL */
+/* ------------------------------------------------ */
+
+.final-result-box {
+    background-color: #0e1a3d;
+    color: #ffc300;
+    text-align: center;
+    padding: 50px;
+    border-radius: 10px;
+    margin-top: 50px;
+    border: 3px solid #ffc300;
+    box-shadow: 0 0 15px rgba(255, 195, 0, 0.7);
+}
+
+.final-result-box h2 {
+    font-size: 2.5em;
+    margin-top: 0;
+    color: #f0f4f8;
+}
+
+.final-result-box p {
+    font-size: 1.5em;
+    color: #ffc300;
+}
