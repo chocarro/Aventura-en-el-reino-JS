@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=New+Rocker&display=swap');
+
 :root {
     --color-background: #EEDDCC;
     --color-primary: #784A22;
@@ -12,18 +14,23 @@
 /* BASE Y LAYOUT GENERAL */
 /* ========================================= */
 
+body, h1, h2, h3, h4, p, span, button, input {
+    font-family: 'New Rocker', cursive !important;
+}
+
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'New Rocker', cursive ;
     background-color: var(--color-primary);
     color: var(--color-text);
     margin: 0;
     padding: 0;
-    height: 100vh; /* Fija la altura */
+    height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    overflow-y: hidden; /* Elimina el scroll global */
+    overflow-y: hidden;
 }
+
 
 #game-container {
     width: 90%;
@@ -33,7 +40,8 @@ body {
     padding: 20px;
     margin-top: 20px;
     border-radius: 8px;
-    
+    display: flex;
+    flex-direction: column;
     flex-grow: 1;
     max-height: calc(100vh - 40px);
     min-height: 0;
@@ -62,6 +70,7 @@ header h2 {
     flex-direction: column; 
     flex-grow: 1; 
     overflow: hidden;
+     min-height: 0; 
 }
 
 #escena-mercado {
@@ -143,7 +152,7 @@ header h2 {
 }
 
 /* ========================================= */
-/* ESCENA DE MERCADO Y ENEMIGOS (SCROLL AISLADO) */
+/* ESCENA DE MERCADO Y ENEMIGOS*/
 /* ========================================= */
 
 .product-grid, .enemy-grid {
@@ -151,14 +160,9 @@ header h2 {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 20px;
     width: 100%;
-    
-    /* CRÍTICO PARA EL SCROLL: Asegura que el contenedor crezca y desborde */
     min-height: 0; 
     flex-grow: 1; 
-    
-    /* Habilita la barra de desplazamiento que solicitas */
     overflow-y: auto; 
-    
     padding: 10px; 
     padding-bottom: 20px; 
 }

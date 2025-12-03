@@ -1,8 +1,6 @@
-// js/main.js
-
 import { Jugador } from './classes/Jugador.js';
-import { Enemigo } from './classes/Enemigo.js'; // Clase Base
-import { Jefe } from './classes/Jefe.js'; // Clase que Hereda
+import { Enemigo } from './classes/Enemigo.js'; 
+import { Jefe } from './classes/Jefe.js'; 
 import { combate } from './model/batalla.js';
 import { obtenerListaProductos, aplicarDescuentoAleatorio } from './model/mercado.js';
 import { distinguirJugador } from './model/ranking.js';
@@ -12,15 +10,15 @@ import { RAREZA, TIPO_PRODUCTO, UMBRAL_VETERANO } from './utils/constants.js';
 // --- VARIABLES DE ESTADO GLOBALES ---
 let jugador = null;
 let productosDisponibles = [];
-let productosEnCesta = []; // Contiene los productos seleccionados antes de comprar
+let productosEnCesta = []; 
 let enemigosIniciales = [
     new Enemigo("Goblin", "imagenes/Personajes/goblin.png", 8, 50),
     new Enemigo("Lobo", "imagenes/Personajes/lobo.png", 9, 60),
     new Enemigo("Bandido", "imagenes/Personajes/bandido.png", 12, 80),
     new Jefe("Dragón", "imagenes/Personajes/dragon.png", 20, 150),
 ];
-let enemigosRestantes = []; // Enemigos que quedan por luchar
-let currentEnemy = null; // Enemigo activo en el combate
+let enemigosRestantes = []; 
+let currentEnemy = null; 
 
 // --- MANEJO DEL DOM Y RENDERIZADO ---
 
@@ -55,17 +53,14 @@ function showScene(sceneId) {
 function renderPlayerStats(prefix, fullLife = false) {
     if (!jugador) return;
 
-    // Obtener los valores calculados
     const currentAttack = jugador.totalAttack;
     const currentDefense = jugador.totalDefense;
-    const currentLife = jugador.totalLife; // Vida máxima con bonus
+    const currentLife = jugador.totalLife; 
 
-    // Actualizar el DOM
     document.getElementById(`${prefix}ataque`).textContent = currentAttack;
     document.getElementById(`${prefix}defensa`).textContent = currentDefense;
     document.getElementById(`${prefix}puntos`).textContent = jugador.points;
     
-    // Si es la escena de inicio/estado, muestra la vida máxima/total
     if (fullLife) {
         document.getElementById(`${prefix}vida-max`).textContent = currentLife;
     } else {
@@ -78,15 +73,13 @@ function renderPlayerStats(prefix, fullLife = false) {
  */
 function renderInventory() {
     const cestaGrid = document.getElementById('cesta-grid');
-    cestaGrid.innerHTML = ''; // Limpiar el inventario anterior
+    cestaGrid.innerHTML = '';
     
     if (jugador.inventory.length === 0) {
         cestaGrid.innerHTML = '<p id="cesta-vacia-msg">Inventario vacío.</p>';
         return;
     }
-    
-    // Mostrar solo las imágenes de los productos en el inventario
-    jugador.inventory.forEach(item => {
+        jugador.inventory.forEach(item => {
         const itemDiv = document.createElement('div');
         itemDiv.classList.add('inventory-item');
         itemDiv.innerHTML = `<img src="${item.image}" alt="${item.name}" title="${item.name} (${item.bonus})">`;
@@ -167,13 +160,12 @@ function goToMercado() {
 function finishShopping() {
     // 1. Añadir productos de la cesta al inventario del jugador (aplicando clonación)
     productosEnCesta.forEach(product => {
-        // Debemos buscar el producto actualizado de la lista de disponibles (con descuento)
         const productToBuy = productosDisponibles.find(p => p.name === product.name);
         if (productToBuy) {
-            jugador.addItemToInventory(productToBuy); // La clase Jugador ya se encarga de clonar
+            jugador.addItemToInventory(productToBuy); 
         }
     });
-    productosEnCesta = []; // Vaciar la cesta temporal
+    productosEnCesta = [];
 
     // 2. Renderizar stats actualizadas y mostrar
     renderPlayerStats('estado-', true);
@@ -182,12 +174,9 @@ function finishShopping() {
 }
 
 function goToEnemigos() {
-    // 1. Inicializar/refrescar la lista de enemigos restantes (clonación para resetear HP)
     if (enemigosRestantes.length === 0) {
         enemigosRestantes = enemigosIniciales.map(enemy => deepClone(enemy)); 
     }
-    
-    // 2. Renderizar y mostrar
     renderEnemigos();
     showScene('escena-enemigos');
 }
@@ -196,10 +185,8 @@ function goToBatalla(enemyIndex) {
     // 1. Obtener el enemigo a combatir
     const currentEnemy = enemigosRestantes[enemyIndex];
 
-    // **COMPROBACIÓN DE SEGURIDAD CONTRA TypeError: Cannot read properties of null**
     if (!currentEnemy) {
         console.error("Error: Enemigo no válido o no encontrado. Volviendo a la selección.");
-        // Si no hay enemigo válido (ej: índice fuera de rango), regresamos a la selección.
         goToEnemigos(); 
         return; 
     }
@@ -208,7 +195,6 @@ function goToBatalla(enemyIndex) {
     const playerAvatar = document.getElementById('batalla-player-avatar');
     const enemyAvatar = document.getElementById('batalla-enemy-avatar');
 
-    // --- Lógica de la Animación de Entrada (Requisito de Diseño) ---
     // a) Establecer posición inicial fuera de pantalla (para forzar la animación CSS)
     playerAvatar.classList.add('player-initial-pos');
     enemyAvatar.classList.add('enemy-initial-pos');
@@ -224,7 +210,6 @@ function goToBatalla(enemyIndex) {
     // 5. Mostrar la escena (IMPORTANTE: Esto debe suceder antes de activar la animación)
     showScene('escena-batalla'); 
 
-    // b) Remover las clases iniciales para disparar la transición CSS (animación de entrada)
     setTimeout(() => {
         playerAvatar.classList.remove('player-initial-pos');
         enemyAvatar.classList.remove('enemy-initial-pos');
@@ -232,7 +217,6 @@ function goToBatalla(enemyIndex) {
         playerAvatar.classList.add('avatar-loaded');
         enemyAvatar.classList.add('avatar-loaded');
     }, 50); 
-    // --- Fin Lógica de la Animación de Entrada ---
 
     // 6. Mostrar el log y el resultado del combate
     document.getElementById('combate-log').innerHTML = combatLog.map(msg => `<p>${msg}</p>`).join('');
@@ -299,7 +283,6 @@ function setupEventListeners() {
                 productDiv.classList.add('selected-product');
                 button.textContent = 'Retirar';
             } else {
-                // Retirar de la cesta
                 productosEnCesta = productosEnCesta.filter(p => p.name !== productName);
                 productDiv.classList.remove('selected-product');
                 button.textContent = 'Añadir';
@@ -312,7 +295,7 @@ function setupEventListeners() {
     // Escena 3: Estado Actualizado
     document.getElementById('btn-continuar-estado').addEventListener('click', goToEnemigos);
     
-    // Escena 4: Enemigos (Selección de enemigo para luchar)
+    // Escena 4: Enemigos 
     document.getElementById('enemigos-grid').addEventListener('click', (e) => {
         const button = e.target;
         if (button.classList.contains('btn-seleccionar-enemigo')) {
@@ -322,11 +305,8 @@ function setupEventListeners() {
         }
     });
 
-    // Escena 5: Batalla
     document.getElementById('btn-continuar-batalla').addEventListener('click', continueAfterBattle);
-
-    // Escena 6: Final
-    document.getElementById('btn-reiniciar').addEventListener('click', initializeGame); // Reiniciar el juego
+    document.getElementById('btn-reiniciar').addEventListener('click', initializeGame); 
 }
 
 // --- INICIALIZACIÓN DEL JUEGO ---
@@ -335,22 +315,18 @@ function setupEventListeners() {
  * @description Inicializa el juego al cargar el DOM.
  */
 function initializeGame() {
-    // Reiniciar variables de estado globales
     jugador = new Jugador("Cazador", "imagenes/9.png", 100); 
     productosDisponibles = obtenerListaProductos(); 
     productosEnCesta = []; 
     enemigosRestantes = []; 
     currentEnemy = null;
     
-    // Renderizar la escena inicial
     renderPlayerStats('inicio-', false);
     renderInventory();
     showScene('escena-inicio');
 }
 
-
-// Punto de entrada: Asegurar que el DOM está cargado antes de inicializar
 document.addEventListener('DOMContentLoaded', () => {
-    setupEventListeners(); // Configurar todos los listeners una sola vez
-    initializeGame(); // Iniciar el juego
+    setupEventListeners(); 
+    initializeGame(); 
 });
