@@ -92,15 +92,14 @@ function renderInventory() {
  */
 function renderMercado() {
     const grid = document.getElementById('productos-grid');
-    grid.innerHTML = ''; // Limpiar la cuadrícula
+    grid.innerHTML = ''; 
 
     productosDisponibles.forEach(product => {
         const itemDiv = document.createElement('div');
         itemDiv.classList.add('product-item');
         itemDiv.setAttribute('data-name', product.name);
-        itemDiv.setAttribute('data-id', product.name.replace(/\s/g, '-')); // Usar nombre como ID simple
+        itemDiv.setAttribute('data-id', product.name.replace(/\s/g, '-')); 
 
-        // Aplicar clase si el producto está actualmente seleccionado en la cesta
         if (productosEnCesta.some(item => item.name === product.name)) {
              itemDiv.classList.add('selected-product');
         }
@@ -182,7 +181,6 @@ function goToEnemigos() {
 }
 
 function goToBatalla(enemyIndex) {
-    // 1. Obtener el enemigo a combatir
     const currentEnemy = enemigosRestantes[enemyIndex];
 
     if (!currentEnemy) {
@@ -191,39 +189,35 @@ function goToBatalla(enemyIndex) {
         return; 
     }
 
-    // 2. Obtener elementos DOM para la animación
     const playerAvatar = document.getElementById('batalla-player-avatar');
     const enemyAvatar = document.getElementById('batalla-enemy-avatar');
 
-    // a) Establecer posición inicial fuera de pantalla (para forzar la animación CSS)
+    playerAvatar.classList.remove('player-initial-pos', 'avatar-loaded');
+    enemyAvatar.classList.remove('enemy-initial-pos', 'avatar-loaded');
+    
     playerAvatar.classList.add('player-initial-pos');
     enemyAvatar.classList.add('enemy-initial-pos');
     
-    // 3. Renderizar avatares y limpiar log
     enemyAvatar.src = currentEnemy.avatar; 
     enemyAvatar.alt = currentEnemy.name;
     document.getElementById('combate-log').textContent = ''; 
     
-    // 4. Ejecutar el combate
     const { winner, points, combatLog } = combate(currentEnemy, jugador);
 
-    // 5. Mostrar la escena (IMPORTANTE: Esto debe suceder antes de activar la animación)
     showScene('escena-batalla'); 
 
     setTimeout(() => {
         playerAvatar.classList.remove('player-initial-pos');
         enemyAvatar.classList.remove('enemy-initial-pos');
         
-        playerAvatar.classList.add('avatar-loaded');
+        playerAvatar.classList.add('avatar-loaded'); 
         enemyAvatar.classList.add('avatar-loaded');
     }, 50); 
 
-    // 6. Mostrar el log y el resultado del combate
     document.getElementById('combate-log').innerHTML = combatLog.map(msg => `<p>${msg}</p>`).join('');
     document.getElementById('batalla-ganador').textContent = winner;
     document.getElementById('batalla-puntos-ganados').textContent = points;
     
-    // 7. Actualizar estado del juego: Eliminar al enemigo si el jugador ganó
     if (winner === 'Jugador') {
         enemigosRestantes.splice(enemyIndex, 1);
     } 
