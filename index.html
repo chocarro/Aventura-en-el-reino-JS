@@ -4,151 +4,128 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aventura en el Reino de JS</title>
-    <link rel="stylesheet" href="style.css"> 
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div id="game-container">
+    <main id="game-container">
 
-        <!--1. Escena de Inicio (Tarjeta del Jugador Inicial)-->
-        <section id="scene-start" class="game-scene active-scene"> 
-            <h3>¡Bienvenido al Reino de JS, Cazador!</h3>
+        <section id="escena-inicio" class="scene active-scene">
+            <header>
+                <h2>Aventura en el Reino de JS: Inicio</h2>
+            </header>
             
-            <div id="player-card-initial">
-                <img src="imagenes/1.png" alt="Avatar del Jugador" id="player-avatar-img">
-                <p>Nombre: <span id="player-name-start">Cazador</span></p>
+            <div class="player-card">
+                <img id="inicio-avatar" src="imagenes/Personajes/1.png" alt="Avatar del Jugador">
+                <h3 id="inicio-nombre">Cazador</h3>
                 
                 <div class="stats-grid">
-                    <div class="stat-box">Ataque: <span id="stat-attack-start">0</span></div>
-                    <div class="stat-box">Defensa: <span id="stat-defense-start">0</span></div>
-                    <div class="stat-box">Vida: <span id="stat-life-start">100</span></div>
-                    <div class="stat-box">Puntos: <span id="stat-points-start">0</span></div>
+                    <div class="stat-box">Ataque: <span id="inicio-ataque">0</span></div>
+                    <div class="stat-box">Defensa: <span id="inicio-defensa">0</span></div>
+                    <div class="stat-box">Vida: <span id="inicio-vida">100</span></div>
+                    <div class="stat-box">Puntos: <span id="inicio-puntos">0</span></div>
                 </div>
+            </div>
+            
+            <button id="btn-continuar-inicio" class="action-button">Continuar</button>
+        </section>
+
+
+      <section id="escena-mercado" class="scene hidden-scene">
+            <header>
+                <h2>Mercado Negro</h2>
+                <p id="mercado-descuento-info" class="descuento-mensaje">¡Aplicando descuentos del día!</p>
+            </header>
+            
+            <div id="productos-grid" class="product-grid">
+                </div>
+
+            <button id="btn-comprar" class="action-button">Terminar Compra y Continuar</button>
+        </section>
+
+
+        <section id="escena-estado" class="scene hidden-scene">
+            <header>
+                <h2>Estado Actualizado</h2>
+            </header>
+            
+            <div class="player-card">
+                <img id="estado-avatar" src="imagenes/Personajes/1.png" alt="Avatar del Jugador">
+                <h3 id="estado-nombre">Cazador</h3>
                 
-<button id="btn-start-adventure" class="btn-continue">Comenzar Aventura</button>            </div>
-        </section>
-
-
-             <!--2. Escena de Mercado-->
-        <section id="scene-market" class="game-scene hidden-scene"> 
-            <h3>🛒 Mercado Negro</h3>
-            <p>¡Compra objetos para mejorar tus estadísticas antes de la batalla!</p>
-            
-            <div id="product-list" class="market-grid">
-                </div>
-            
-            <hr>
-            
-            <h4>Cesta de Compra</h4>
-            <div id="cart-display" class="cart-grid">
-                </div>
-
-            <button id="btn-go-to-stats" class="btn-continue">Continuar</button>
-        </section>
-
-
-            <!-- 3. Escena de Estado Actualizado (Después de Comprar)-->
-        <section id="scene-updated-stats" class="game-scene hidden-scene">
-            <h3>📈 Estado Actualizado</h3>
-            <p>Tus estadísticas con el equipo actual:</p>
-            
-            <div id="player-card-updated">
-                <img src="imagenes/1.png" alt="Avatar del Jugador">
-                <p>Nombre: <span id="player-name-updated">Cazador</span></p>
-
                 <div class="stats-grid">
-                    <div class="stat-box">Ataque: <span id="stat-attack-updated">0</span></div>
-                    <div class="stat-box">Defensa: <span id="stat-defense-updated">0</span></div>
-                    <div class="stat-box">Vida Total: <span id="stat-life-updated">100</span></div> 
-                    <div class="stat-box">Puntos: <span id="stat-points-updated">0</span></div>
+                    <div class="stat-box">Ataque: <span id="estado-ataque">0</span></div>
+                    <div class="stat-box">Defensa: <span id="estado-defensa">0</span></div>
+                    <div class="stat-box">Vida Máxima: <span id="estado-vida-max">100</span></div>
+                    <div class="stat-box">Puntos: <span id="estado-puntos">0</span></div>
                 </div>
-                
-                <button id="btn-go-to-enemies" class="btn-continue">¡A la Batalla!</button>
-            </div>
-        </section>
-
-        
-            <!-- 4. Escena de Enemigos-->
-        <section id="scene-enemies" class="game-scene hidden-scene">
-            <h3>👹 Enemigos</h3>
-            <p>Selecciona un enemigo para comenzar el combate.</p>
-            
-            <div id="enemy-selection-list" class="enemies-grid">
-                </div>
-            <button id="btn-continue-enemies" class="btn-continue">Continuar</button>
-
-        </section>
-
-
-      <!--5. Escena de Batallas (Continuación)-->
-<section id="scene-battle" class="game-scene hidden-scene">
-            <h3>⚔️ Combates</h3>
-            
-            <div id="battle-display" class="battle-area">
-                
-                <div class="combatants-info">
-                    <div class="player-side">
-                        <img src="imagenes/1.png" alt="Jugador" id="battle-player-avatar" class="combat-avatar">
-                        <p id="battle-player-name">Cazador</p>
-                        <p>Vida: <span id="battle-player-life">100</span></p>
-                    </div>
-                    
-                    <span class="vs-text">VS</span>
-                    
-                    <div class="enemy-side">
-                        <img src="" alt="Enemigo" id="battle-enemy-avatar" class="combat-avatar"> 
-                        <p id="battle-enemy-name">Lobo</p>
-                        <p>Vida: <span id="battle-enemy-life">50</span></p>
-                    </div>
-                </div>
-
-                <div class="combat-log">
-                    <h4>Resultado del Turno:</h4>
-                    <p id="log-message">Ganador: Cazador[cite: 164]. Puntos ganados: 109 [cite: 164]</p>
-                </div>
-                
-                <button id="btn-continue-battle" class="btn-continue">Continuar Batalla</button> 
             </div>
             
-            <div id="inventory-display-battle" class="cart-grid">
-                </div>
+            <button id="btn-continuar-estado" class="action-button">¡A la Batalla!</button>
         </section>
 
 
-      <!--6. Escena Final (Resultado y Ranking)-->
-<section id="scene-final" class="game-scene hidden-scene">
-            <h3>📜 Resultado Final</h3>
+        <section id="escena-enemigos" class="scene hidden-scene">
+            <header>
+                <h2>Selecciona un Enemigo</h2>
+            </header>
 
-            <div class="final-result-box">
-                <h2 id="final-rank">El jugador ha logrado ser un Veterano</h2> 
-                <p>Puntos totales: <span id="final-score">654</span></p> 
+            <div id="enemigos-grid" class="enemy-grid">
+                </div>
+            
+            <button id="btn-terminar-enemigos" class="action-button secondary">Volver al inicio</button>
+        </section>
 
-                <button id="btn-restart" class="btn-continue">Reiniciar Aventura</button> 
+
+        <section id="escena-batalla" class="scene hidden-scene">
+            <header>
+                <h2>Combates</h2>
+            </header>
+
+            <div class="combat-display">
+                <img id="batalla-player-avatar" src="imagenes/Personajes/1.png" alt="Jugador">
+                <span>VS</span>
+                <img id="batalla-enemy-avatar" src="" alt="Enemigo">
             </div>
 
-            <div id="inventory-display-final" class="cart-grid">
+            <div id="combate-log" class="combat-log">
                 </div>
+
+            <div id="resultado-combate">
+                <p>Ganador: <span id="batalla-ganador">--</span></p>
+                <p>Puntos ganados: <span id="batalla-puntos-ganados">0</span></p>
+            </div>
+
+            <button id="btn-continuar-batalla" class="action-button">Continuar</button>
         </section>
 
-    </div> 
 
-<script type="module" src="js/classes/Producto.js"></script>
-    <script type="module" src="js/classes/Enemigo.js"></script>
-    <script type="module" src="js/classes/Jefe.js"></script> <script type="module" src="js/classes/Jugador.js"></script>
+        <section id="escena-final" class="scene hidden-scene">
+            <header>
+                <h2>Resultado Final</h2>
+            </header>
 
-    <script type="module" src="js/utils/constants.js"></script>
-    <script type="module" src="js/utils/utils.js"></script>
+            <div class="final-summary">
+                <p id="final-rango-message">El jugador ha logrado ser un <strong id="final-rango">[Rango]</strong></p>
+                <p>Puntos totales: <strong id="final-puntos-totales">0</strong></p>
+            </div>
+            
+            <button id="btn-reiniciar" class="action-button">Reiniciar</button>
+        </section>
 
-    <script type="module" src="js/model/mercado.js"></script>
-    <script type="module" src="js/model/batalla.js"></script>
-    <script type="module" src="js/model/ranking.js"></script>
+    </main>
+    <footer id="inventory-basket">
+        <h3></h3>
+        <div id="cesta-grid" class="basket-grid">
+            <p id="cesta-vacia-msg"> </p>
+        </div>
+    </footer>
+
+    
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.js"></script>
     
     <script type="module" src="js/main.js"></script>
-</body>
-</html>
-</body>
-</html>
-</body>
-</html>
+
 </body>
 </html>

@@ -1,36 +1,28 @@
-export function cambiarEscena(sceneId) {
-    const escenas = document.querySelectorAll('.game-scene');
-    
-    // Ocultar todas las escenas
-    escenas.forEach(scene => {
-        if (scene.id === sceneId) {
-            // Mostrar la escena objetivo
-            scene.classList.add('active-scene');
-            scene.classList.remove('hidden-scene');
-        } else {
-            // Ocultar todas las demás
-            scene.classList.remove('active-scene');
-            scene.classList.add('hidden-scene');
-        }
-    });
-    
+
+/**
+ * @description Crea una copia profunda de un objeto.
+ * @param {Object} obj - El objeto a clonar.
+ * @returns {Object} Una nueva instancia del objeto.
+ */
+export function deepClone(obj) {
+    return JSON.parse(JSON.stringify(obj));
 }
 
-export function clonarObjeto(obj) {
-    if (obj && typeof obj.constructor === 'function') {
-        const clon = new obj.constructor(...Object.values(obj));
-        return clon;
-    }
-    
-return JSON.parse(JSON.stringify(obj)); 
+/**
+ * @description Formatea un número (precio en céntimos) a formato moneda.
+ * @param {number} amount - El precio numérico en céntimos.
+ * @returns {string} El precio formateado (ej: "9,50€").
+ */
+export function formatPrice(amount) {
+    const euros = (amount / 100).toFixed(2).replace('.', ',');
+    return `${euros}€`;
 }
 
-export function obtenerElementoAleatorio(arr) {
-    const indice = Math.floor(Math.random() * arr.length);
-    return arr[indice];
-}
-
-export function formatCurrency(precioEnCentimos) {
-    const euros = precioEnCentimos / 100;
-    return `${euros.toFixed(2)} €`;
+/**
+ * @description Retorna un elemento aleatorio de un array.
+ * @param {Array} array - El array de entrada.
+ * @returns {*} Un elemento aleatorio del array.
+ */
+export function getRandomElement(array) {
+    return array[Math.floor(Math.random() * array.length)];
 }

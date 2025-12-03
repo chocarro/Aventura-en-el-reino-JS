@@ -1,30 +1,67 @@
-import Producto from '../classes/Producto.js';
-import { RAREZA, TIPO_PRODUCTO } from '../utils/constants.js';
 
-const LISTA_PRODUCTOS_ORIGINAL = [
-    // Propiedades: nombre, imagen, precio, rareza, tipo, bonus
-    new Producto("Manzana", "img/manzana.png", 40, RAREZA.COMUN, TIPO_PRODUCTO.CONSUMIBLE, 10),
-    new Producto("Armadura de Cuero", "img/armadura.png", 900, RAREZA.COMUN, TIPO_PRODUCTO.ARMADURA, 5),
-    new Producto("Hacha de Combate", "img/hacha.png", 1500, RAREZA.RARA, TIPO_PRODUCTO.ARMA, 15),
-    new Producto("Botas de Viaje", "img/botas.png", 300, RAREZA.COMUN, TIPO_PRODUCTO.ARMADURA, 2),
+import { Producto } from '../classes/Producto.js'; 
+import { RAREZA, TIPO_PRODUCTO } from '../utils/constants.js';
+import { getRandomElement } from '../utils/utils.js';
+
+const LISTA_PRODUCTOS = [
+    // Consumibles
+    new Producto("Manzana Curativa", "imagenes/Mercado/Manzana.png", 400, RAREZA.COMUN, TIPO_PRODUCTO.CONSUMIBLE, 10), 
+    new Producto("Poción de Vida", "imagenes/Mercado/Pocion.png", 1200, RAREZA.RARA, TIPO_PRODUCTO.CONSUMIBLE, 30), 
+    
+    // Armas
+    new Producto("Daga de Hierro", "imagenes/Mercado/daga.png", 900, RAREZA.COMUN, TIPO_PRODUCTO.ARMA, 5), 
+    new Producto("Hacha de Guerra", "imagenes/Mercado/hacha.png", 2500, RAREZA.RARA, TIPO_PRODUCTO.ARMA, 12), 
+    new Producto("Espada Épica", "imagenes/Mercado/espada.png", 5500, RAREZA.EPICA, TIPO_PRODUCTO.ARMA, 25), 
+    
+    // Armaduras
+    new Producto("Armadura de Cuero", "imagenes/Mercado/armadura.png", 1500, RAREZA.COMUN, TIPO_PRODUCTO.ARMADURA, 3), 
+    new Producto("Escudo Templario", "imagenes/Mercado/escudo.png", 4000, RAREZA.RARA, TIPO_PRODUCTO.ARMADURA, 8), 
+    new Producto("Cota de Malla Legendaria", "imagenes/Mercado/malla.png", 9000, RAREZA.LEGENDARIA, TIPO_PRODUCTO.ARMADURA, 15), 
 ];
 
-// 1. **Función esencial agregada:**
-export function getListaProductosOriginal() {
-    // Retorna una copia para evitar modificar el original
-    return LISTA_PRODUCTOS_ORIGINAL.map(p => p); 
+export function obtenerListaProductos() {
+    return [...LISTA_PRODUCTOS];
 }
 
+/**
+ * @description Filtra los productos por rareza.
+ */
 export function filtrarProductos(rareza) {
-    return LISTA_PRODUCTOS_ORIGINAL.filter(p => p.rareza === rareza);
+    return LISTA_PRODUCTOS.filter(product => product.rarity === rareza);
 }
 
-export function aplicarDescuentoPorCriterio(criterio, descuento) {
-    // Usamos LISTA_PRODUCTOS_ORIGINAL para aplicar el descuento
-    return LISTA_PRODUCTOS_ORIGINAL.map(producto => {
-        if (producto.rareza === criterio || producto.tipo === criterio) {
-            return producto.aplicarUnDescuento(descuento); 
+/**
+ * @description Aplica un descuento a productos de un tipo o rareza específica.
+ */
+export function aplicarDescuento(filterValue, discountPercent) {
+    return LISTA_PRODUCTOS.map(product => {
+        if (product.rarity === filterValue || product.type === filterValue) {
+            return product.applyDiscount(discountPercent); 
         }
-        return producto;
+        return product;
     });
+}
+
+/**
+ * @description Aplica un descuento a productos de una rareza elegida aleatoriamente.
+ */
+export function aplicarDescuentoAleatorio(discountPercent) {
+    const rarezaAleatoria = getRandomElement(Object.values(RAREZA)); 
+    
+    const productosDescontados = LISTA_PRODUCTOS.map(product => {
+        if (product.rarity === rarezaAleatoria) {
+            return product.applyDiscount(discountPercent); 
+        }
+        return product;
+    });
+
+    return { products: productosDescontados, rarity: rarezaAleatoria };
+}
+
+/**
+ * @description Busca un producto por nombre.
+ */
+export function buscarProducto(name) {
+    const searchName = name.toLowerCase();
+    return LISTA_PRODUCTOS.find(product => product.name.toLowerCase().includes(searchName));
 }

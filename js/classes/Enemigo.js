@@ -1,10 +1,20 @@
-// Archivo: js/classes/Enemigo.js
+
+/**
+ * @class Enemigo
+ * @description Clase base para todos los enemigos.
+ */
 export class Enemigo {
-    constructor(nombre, avatar, nivelAtaque, puntosVida) {
-        this.nombre = nombre;
-        this.avatar = avatar;
-        this.nivelAtaque = nivelAtaque;
-        this.puntosVida = puntosVida;
-        this.vidaInicial = puntosVida; 
+    /**
+     * @param {string} name 
+     * @param {string} avatar 
+     * @param {number} attackLevel - Nivel de ataque.
+     * @param {number} hitPoints - Puntos de vida (HP).
+     */
+    constructor(name, avatar, attackLevel, hitPoints) {
+        this.name = name; 
+        this.avatar = avatar; 
+        this.attackLevel = attackLevel; 
+        this.currentLife = hitPoints; 
+        this.maxLife = hitPoints; 
     }
 }

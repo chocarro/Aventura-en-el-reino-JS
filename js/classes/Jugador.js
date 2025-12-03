@@ -1,47 +1,70 @@
-export default class Jugador {
-    constructor(nombre, avatar, vidaInicial = 100) {
-        this.nombre = nombre;
-        this.avatar = avatar;
-        this.puntos = 0;
-        this.inventario = [];
-        this.vida = vidaInicial;
-        this.vidaMaxima = vidaInicial;
+
+import { Producto } from './Producto.js';
+import { TIPO_PRODUCTO } from '../utils/constants.js';
+import { deepClone } from '../utils/utils.js';
+
+/**
+ * @class Jugador
+ * @description Representa al jugador principal del juego.
+ */
+export class Jugador {
+    /**
+     * @param {string} name 
+     * @param {string} avatar 
+     * @param {number} initialLife 
+     */
+    constructor(name, avatar, initialLife = 100) {
+        this.name = name; 
+        this.avatar = avatar; 
+        this.points = 0; 
+        this.inventory = []; // Array de productos clonados
+        this.maxLife = initialLife; 
+        this.currentLife = initialLife; 
     }
 
-    añadirObjetoAlInventario(producto) {
-        // Asumimos que el producto ya fue clonado en handleProductAction
-        this.inventario.push(producto);
+    /**
+     * @description Añade un objeto al inventario (Clona el producto antes).
+     * @param {Producto} product - El producto a añadir.
+     */
+    addItemToInventory(product) {
+        const productClone = deepClone(product); 
+        this.inventory.push(productClone);
     }
 
-    sumarPuntos(puntosGanados) {
-        this.puntos += puntosGanados;
+    /**
+     * @description Actualiza la puntuación del jugador.
+     * @param {number} score - Puntos a sumar.
+     */
+    addPoints(score) {
+        this.points += score;
     }
-    
-    obtenerAtaqueTotal() {
-        return this.inventario
-            .filter(item => item.tipo === 'Arma')
+
+    /**
+     * @description Calcula el ataque total sumando los bonus de las Armas.
+     */
+    get totalAttack() {
+        return this.inventory
+            .filter(item => item.type === TIPO_PRODUCTO.ARMA)
             .reduce((total, item) => total + item.bonus, 0);
     }
 
-    obtenerDefensaTotal() {
-        return this.inventario
-            .filter(item => item.tipo === 'Armadura')
+    /**
+     * @description Calcula la defensa total sumando los bonus de las Armaduras.
+     */
+    get totalDefense() {
+        return this.inventory
+            .filter(item => item.type === TIPO_PRODUCTO.ARMADURA)
             .reduce((total, item) => total + item.bonus, 0);
     }
-    
-    obtenerVidaTotal() {
-        // Calcula la vida máxima potencial sumando la base y los consumibles
-        const bonusConsumibles = this.inventario
-            .filter(item => item.tipo === 'Consumible')
+
+    /**
+     * @description Calcula la vida total (base + bonus de Consumibles).
+     */
+    get totalLife() {
+        const consumableBonus = this.inventory
+            .filter(item => item.type === TIPO_PRODUCTO.CONSUMIBLE)
             .reduce((total, item) => total + item.bonus, 0);
         
-        return this.vidaMaxima + bonusConsumibles;
-    }
-    
-    /**
-     * Restaura la vida del jugador a su máximo potencial (base + consumibles).
-     */
-    curarVida() {
-        this.vida = this.obtenerVidaTotal();
+        return this.maxLife + consumableBonus; 
     }
 }

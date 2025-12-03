@@ -1,39 +1,45 @@
-import { formatCurrency } from '../utils/utils.js';
+// js/classes/Producto.js
 
-export default class Producto {
-    constructor(nombre, imagen, precio, rareza, tipo, bonus) {
-        this.nombre = nombre;
-        this.imagen = imagen;
-        this.precio = precio;
-        this.rareza = rareza;
-        this.tipo = tipo; 
-        this.bonus = bonus;
+import { TIPO_PRODUCTO } from '../utils/constants.js';
+import { deepClone, formatPrice } from '../utils/utils.js';
+
+/**
+ * @class Producto
+ * @description Representa un objeto que el jugador puede comprar.
+ */
+export class Producto {
+    //
+    constructor(name, image, price, rarity, type, bonus) {
+        this.name = name;
+        this.image = image;
+        this.price = price; // En céntimos
+        this.rarity = rarity;
+        this.type = type; 
+        this.bonus = bonus; // Se suma a Ataque, Defensa o Vida
     }
 
     /**
-     * Formatea el precio (ej. 950 a 9,50€). (Requisito funcional)
-     * @returns {string} Precio formateado.
+     * @description Devuelve el precio formateado (Método formatear atributos).
      */
-    formatearAtributos() {
-        return formatCurrency(this.precio);
+    get precioFormateado() {
+        return formatPrice(this.price);
     }
 
     /**
-     * Devuelve un clon con el precio modificado. (Requisito funcional)
-     * @param {number} valor - Valor a descontar (ej. 10 para 10%).
-     * @returns {Producto} Nuevo producto con el precio descontado.
+     * @description Aplica un descuento y devuelve una COPIA (clon) del producto.
      */
-    aplicarUnDescuento(valor) {
-        const nuevoPrecio = this.precio - (this.precio * valor / 100);
-
-        const clon = new Producto(
-            this.nombre,
-            this.imagen,
-            Math.round(nuevoPrecio), // Redondeamos el precio
-            this.rareza,
-            this.tipo,
-            this.bonus
+    applyDiscount(discountPercent) {
+        const newProductData = deepClone(this);
+        const newPrice = newProductData.price * (1 - discountPercent / 100);
+        newProductData.price = Math.round(newPrice);
+        
+        return new Producto(
+            newProductData.name,
+            newProductData.image,
+            newProductData.price,
+            newProductData.rarity,
+            newProductData.type,
+            newProductData.bonus
         );
-        return clon;
     }
 }
