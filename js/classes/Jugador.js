@@ -12,14 +12,16 @@ export class Jugador {
      * @param {string} name 
      * @param {string} avatar 
      * @param {number} initialLife 
+     * @param {number} initialGold 
      */
-    constructor(name, avatar, initialLife = 100) {
+    constructor(name, avatar, initialLife = 100, initialGold = 0) {
         this.name = name; 
         this.avatar = avatar; 
         this.points = 0; 
-        this.inventory = []; // Array de productos clonados
+        this.inventory = []; 
         this.maxLife = initialLife; 
         this.currentLife = initialLife; 
+        this.gold = initialGold; 
     }
 
     /**
@@ -38,6 +40,14 @@ export class Jugador {
     addPoints(score) {
         this.points += score;
     }
+    
+    /**
+     * @description Suma oro al saldo del jugador.
+     * @param {number} amount - Cantidad de oro a sumar.
+     */
+    addGold(amount) {
+        this.gold += amount;
+    } // **NUEVO**
 
     /**
      * @description Calcula el ataque total sumando los bonus de las Armas.

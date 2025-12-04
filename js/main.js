@@ -2,7 +2,7 @@ import { Jugador } from './classes/Jugador.js';
 import { Enemigo } from './classes/Enemigo.js'; 
 import { Jefe } from './classes/Jefe.js'; 
 import { combate } from './model/batalla.js';
-import { obtenerListaProductos, aplicarDescuentoAleatorio } from './model/mercado.js';
+import { obtenerListaProductos, aplicarDescuentoAleatorio, buscarProducto } from './model/mercado.js';
 import { distinguirJugador } from './model/ranking.js';
 import { deepClone } from './utils/utils.js';
 import { RAREZA, TIPO_PRODUCTO, UMBRAL_VETERANO } from './utils/constants.js';
@@ -10,7 +10,7 @@ import { RAREZA, TIPO_PRODUCTO, UMBRAL_VETERANO } from './utils/constants.js';
 // --- VARIABLES DE ESTADO GLOBALES ---
 let jugador = null;
 let productosDisponibles = [];
-let productosEnCesta = []; 
+let productosEnCesta = new Map(); 
 let enemigosIniciales = [
     new Enemigo("Goblin", "imagenes/Personajes/goblin.png", 8, 50),
     new Enemigo("Lobo", "imagenes/Personajes/lobo.png", 9, 60),
@@ -93,14 +93,19 @@ function renderInventory() {
 function renderMercado() {
     const grid = document.getElementById('productos-grid');
     grid.innerHTML = ''; 
+    let totalCesta = 0;
 
     productosDisponibles.forEach(product => {
+        const productDataId = product.name.replace(/\s/g, '-');
+        
         const itemDiv = document.createElement('div');
         itemDiv.classList.add('product-item');
         itemDiv.setAttribute('data-name', product.name);
-        itemDiv.setAttribute('data-id', product.name.replace(/\s/g, '-')); 
+        itemDiv.setAttribute('data-id', productDataId); 
+        itemDiv.setAttribute('draggable', 'true');
+        itemDiv.id = `product-${productDataId}`;
 
-        if (productosEnCesta.some(item => item.name === product.name)) {
+        if (productosEnCesta.has(product.name)) {
              itemDiv.classList.add('selected-product');
         }
 
@@ -109,11 +114,43 @@ function renderMercado() {
             <p><strong>${product.name}</strong> (${product.type})</p>
             <p class="product-bonus">Bonus: +${product.bonus}</p>
             <p class="product-price">Precio: ${product.precioFormateado}</p>
-            <button class="btn-toggle-basket">${productosEnCesta.some(item => item.name === product.name) ? 'Retirar' : 'Añadir'}</button>
-        `;
+            `;
 
         grid.appendChild(itemDiv);
     });
+    
+    const cestaTemporalDiv = document.getElementById('cesta-mercado');
+    cestaTemporalDiv.innerHTML = '';
+    
+    if (productosEnCesta.size === 0) {
+        cestaTemporalDiv.innerHTML = '<p>Arrastra productos aquí</p>';
+    } else {
+        productosEnCesta.forEach((product, name) => {
+            const itemDiv = document.createElement('div');
+            itemDiv.classList.add('basket-temp-item');
+            itemDiv.setAttribute('data-name', name);
+            itemDiv.innerHTML = `
+                <img src="${product.image}" alt="${name}" title="${name}">
+                <button class="btn-remove-basket">X</button>
+            `;
+            cestaTemporalDiv.appendChild(itemDiv);
+            totalCesta += product.price;
+        });
+    }
+
+    document.getElementById('mercado-oro').textContent = jugador.gold;
+    document.getElementById('mercado-total-cesta').textContent = (totalCesta / 100).toFixed(2) + '€';
+    
+    const btnComprar = document.getElementById('btn-comprar');
+    if (totalCesta > jugador.gold * 100) {
+        btnComprar.disabled = true;
+        btnComprar.textContent = 'ORO INSUFICIENTE';
+        btnComprar.classList.add('insufficient-gold');
+    } else {
+        btnComprar.disabled = false;
+        btnComprar.textContent = 'Terminar Compra y Continuar';
+        btnComprar.classList.remove('insufficient-gold');
+    }
 }
 
 /**
@@ -143,33 +180,41 @@ function renderEnemigos() {
 // --- FLUJO DE ESCENAS ---
 
 function goToMercado() {
-    // 1. Aplicar descuento aleatorio al cargar la escena
     const { products: discountedProducts, rarity: discountedRarity } = aplicarDescuentoAleatorio(15);
     productosDisponibles = discountedProducts;
     
-    // 2. Actualizar mensaje de descuento
     document.getElementById('mercado-descuento-info').textContent = 
         `¡Descuento del 15% aplicado a la rareza ${discountedRarity}!`;
 
-    // 3. Renderizar y mostrar
+    productosEnCesta.clear();
+
     renderMercado();
     showScene('escena-mercado');
 }
 
 function finishShopping() {
-    // 1. Añadir productos de la cesta al inventario del jugador (aplicando clonación)
-    productosEnCesta.forEach(product => {
-        const productToBuy = productosDisponibles.find(p => p.name === product.name);
-        if (productToBuy) {
-            jugador.addItemToInventory(productToBuy); 
-        }
-    });
-    productosEnCesta = [];
+    let totalCompra = 0;
 
-    // 2. Renderizar stats actualizadas y mostrar
-    renderPlayerStats('estado-', true);
-    renderInventory();
-    showScene('escena-estado');
+    productosEnCesta.forEach(product => {
+        totalCompra += product.price;
+    });
+
+    if (totalCompra <= jugador.gold * 100) {
+        jugador.gold -= totalCompra / 100;
+
+        productosEnCesta.forEach(product => {
+            jugador.addItemToInventory(product); 
+        });
+
+        productosEnCesta.clear();
+
+        renderPlayerStats('estado-', true);
+        renderInventory();
+        showScene('escena-estado');
+    } else {
+        alert("Error: No tienes suficiente oro para esta compra.");
+        renderMercado(); 
+    }
 }
 
 function goToEnemigos() {
@@ -220,6 +265,7 @@ function goToBatalla(enemyIndex) {
     
     if (winner === 'Jugador') {
         enemigosRestantes.splice(enemyIndex, 1);
+        jugador.addGold(50); 
     } 
     
     renderInventory();
@@ -258,38 +304,61 @@ function continueAfterBattle() {
 // --- MANEJO DE EVENTOS ---
 
 function setupEventListeners() {
-    // Escena 1: Inicio
     document.getElementById('btn-continuar-inicio').addEventListener('click', goToMercado);
 
-    // Escena 2: Mercado (Manejo de añadir/retirar productos)
-    document.getElementById('productos-grid').addEventListener('click', (e) => {
-        const button = e.target;
-        if (button.classList.contains('btn-toggle-basket')) {
-            const productDiv = button.closest('.product-item');
-            const productName = productDiv.getAttribute('data-name');
-            const product = productosDisponibles.find(p => p.name === productName);
+    document.getElementById('productos-grid').addEventListener('dragstart', (e) => {
+        const productDiv = e.target.closest('.product-item');
+        if (productDiv) {
+            e.dataTransfer.setData('text/plain', productDiv.getAttribute('data-name'));
+            e.target.classList.add('dragging');
+        }
+    });
+
+    document.getElementById('productos-grid').addEventListener('dragend', (e) => {
+        e.target.classList.remove('dragging');
+    });
+
+    const cestaMercado = document.getElementById('cesta-mercado');
+    cestaMercado.addEventListener('dragover', (e) => {
+        e.preventDefault(); 
+        cestaMercado.classList.add('drag-over');
+    });
+
+    cestaMercado.addEventListener('dragleave', () => {
+        cestaMercado.classList.remove('drag-over');
+    });
+    
+    cestaMercado.addEventListener('drop', (e) => {
+        e.preventDefault();
+        cestaMercado.classList.remove('drag-over');
+        
+        const productName = e.dataTransfer.getData('text/plain');
+        
+        if (!productosEnCesta.has(productName)) {
+            const productToAdd = productosDisponibles.find(p => p.name === productName);
             
-            if (!product) return;
-            
-            if (button.textContent === 'Añadir') {
-                // Añadir a la cesta
-                productosEnCesta.push(product);
-                productDiv.classList.add('selected-product');
-                button.textContent = 'Retirar';
-            } else {
-                productosEnCesta = productosEnCesta.filter(p => p.name !== productName);
-                productDiv.classList.remove('selected-product');
-                button.textContent = 'Añadir';
+            if (productToAdd) {
+                productosEnCesta.set(productName, productToAdd);
+                renderMercado();
             }
+        }
+    });
+    
+    // Evento de RETIRAR del carrito temporal (delegación)
+    cestaMercado.addEventListener('click', (e) => {
+        const button = e.target;
+        if (button.classList.contains('btn-remove-basket')) {
+            const itemDiv = button.closest('.basket-temp-item');
+            const productName = itemDiv.getAttribute('data-name');
+            
+            productosEnCesta.delete(productName);
+            renderMercado();
         }
     });
 
     document.getElementById('btn-comprar').addEventListener('click', finishShopping);
-
-    // Escena 3: Estado Actualizado
     document.getElementById('btn-continuar-estado').addEventListener('click', goToEnemigos);
     
-    // Escena 4: Enemigos 
     document.getElementById('enemigos-grid').addEventListener('click', (e) => {
         const button = e.target;
         if (button.classList.contains('btn-seleccionar-enemigo')) {
@@ -309,9 +378,9 @@ function setupEventListeners() {
  * @description Inicializa el juego al cargar el DOM.
  */
 function initializeGame() {
-    jugador = new Jugador("Cazador", "imagenes/9.png", 100); 
+    jugador = new Jugador("Cazador", "imagenes/9.png", 100, 500); 
     productosDisponibles = obtenerListaProductos(); 
-    productosEnCesta = []; 
+    productosEnCesta.clear(); 
     enemigosRestantes = []; 
     currentEnemy = null;
     

@@ -37,8 +37,23 @@
                 <p id="mercado-descuento-info" class="descuento-mensaje">¡Aplicando descuentos del día!</p>
             </header>
             
-            <div id="productos-grid" class="product-grid">
+            <div class="market-info-bar">
+                <div class="gold-display">
+                    Saldo (Oro): <strong id="mercado-oro">0</strong>
                 </div>
+                <div class="basket-total">
+                    Total Cesta: <strong id="mercado-total-cesta">0.00€</strong>
+                </div>
+            </div>
+            
+            <div class="market-layout">
+                <div id="productos-grid" class="product-grid">
+                    </div>
+                
+                <div id="cesta-mercado" class="basket-temp-dropzone">
+                    <p>Arrastra productos aquí</p>
+                </div>
+            </div>
 
             <button id="btn-comprar" class="action-button">Terminar Compra y Continuar</button>
         </section>
@@ -115,7 +130,7 @@
 
     </main>
     <footer id="inventory-basket">
-        <h3></h3>
+        <h3>Inventario</h3>
         <div id="cesta-grid" class="basket-grid">
             <p id="cesta-vacia-msg"> </p>
         </div>
