@@ -47,7 +47,7 @@ export class Jugador {
      */
     addGold(amount) {
         this.gold += amount;
-    } // **NUEVO**
+    } 
 
     /**
      * @description Calcula el ataque total sumando los bonus de las Armas.

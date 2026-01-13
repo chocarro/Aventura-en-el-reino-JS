@@ -14,24 +14,88 @@
 /* BASE Y LAYOUT GENERAL */
 /* ========================================= */
 
-body, h1, h2, h3, h4, p, span, button, input {
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+span,
+button,
+input {
     font-family: 'New Rocker', cursive !important;
 }
 
+/* Configuración Global */
 body {
-    font-family: 'New Rocker', cursive ;
-    background-color: var(--color-primary);
-    color: var(--color-text);
     margin: 0;
     padding: 0;
     height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Prohibido el scroll global */
+    background-color: var(--color-primary);
+}
+
+/* Header: 10vh */
+header {
+    height: 10vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-primary);
+    border-bottom: 2px solid var(--color-background);
+    box-sizing: border-box;
+}
+
+/* Contenido Principal (Main): 70vh */
+#game-container {
+    height: 70vh;
+    width: 100%;
+    max-width: 1000px; /* Opcional: centrar contenido ancho */
+    margin: 0 auto;
+    padding: 20px;
+    background-color: var(--color-secondary);
+    overflow-y: auto; /* Único lugar con scroll permitido */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    border-radius: 0; /* Estética SPA */
+}
+
+/* Footer (Inventario): 20vh */
+#inventory-basket {
+    height: 20vh;
+    width: 100%;
+    background-color: var(--color-primary);
+    color: var(--color-background);
     display: flex;
     flex-direction: column;
     align-items: center;
-    overflow-y: hidden;
+    justify-content: center;
+    box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.3);
+    border-top: 2px solid var(--color-accent);
 }
 
+/* Reajuste de la rejilla de inventario */
+.basket-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 60px); /* 6 celdas fijas */
+    gap: 15px;
+    padding: 10px;
+}
 
+.inventory-item {
+    width: 60px;
+    height: 60px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 2px dashed var(--color-accent); /* Estilo celda vacía */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 #game-container {
     width: 90%;
     max-width: 800px;
@@ -66,15 +130,15 @@ header h2 {
 }
 
 .active-scene {
-    display: flex; 
-    flex-direction: column; 
-    flex-grow: 1; 
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
     overflow: hidden;
-     min-height: 0; 
+    min-height: 0;
 }
 
 #escena-mercado {
-    flex-grow: 1; 
+    flex-grow: 1;
 }
 
 
@@ -83,9 +147,21 @@ header h2 {
 /* ========================================= */
 
 @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    20%, 60% { transform: translateX(-5px); }
-    40%, 80% { transform: translateX(5px); }
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    20%,
+    60% {
+        transform: translateX(-5px);
+    }
+
+    40%,
+    80% {
+        transform: translateX(5px);
+    }
 }
 
 .action-button {
@@ -106,7 +182,7 @@ header h2 {
 }
 
 .action-button:active {
-    transform: translateY(1px); 
+    transform: translateY(1px);
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
 
@@ -155,34 +231,38 @@ header h2 {
 /* ESCENA DE MERCADO Y ENEMIGOS*/
 /* ========================================= */
 
-.product-grid, .enemy-grid {
+.product-grid,
+.enemy-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 20px;
     width: 100%;
-    min-height: 0; 
-    flex-grow: 1; 
-    overflow-y: auto; 
-    padding: 10px; 
-    padding-bottom: 20px; 
+    min-height: 0;
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+    padding-bottom: 20px;
 }
 
-.product-item, .enemy-item {
+.product-item,
+.enemy-item {
     background-color: var(--color-background);
     border-radius: 8px;
     padding: 10px;
     text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s, border 0.2s, box-shadow 0.2s; 
+    transition: transform 0.2s, border 0.2s, box-shadow 0.2s;
 }
 
-.product-item:hover, .enemy-item:hover {
+.product-item:hover,
+.enemy-item:hover {
     transform: scale(1.03);
     cursor: pointer;
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); 
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
 }
 
-.product-item img, .enemy-item img {
+.product-item img,
+.enemy-item img {
     max-width: 80%;
     height: auto;
     border-radius: 4px;
@@ -197,7 +277,7 @@ header h2 {
 
 .product-item.selected-product {
     border: 3px solid var(--color-success);
-    background-color: #E6F7F0; 
+    background-color: #E6F7F0;
 }
 
 /* ========================================= */
@@ -206,14 +286,14 @@ header h2 {
 
 .combat-display {
     display: flex;
-    align-items: center; 
+    align-items: center;
     justify-content: space-around;
     width: 70%;
     font-size: 2em;
     font-weight: bold;
     color: var(--color-background);
     margin-bottom: 20px;
-    overflow: hidden; 
+    overflow: hidden;
     min-height: 150px;
 }
 
@@ -223,16 +303,16 @@ header h2 {
     object-fit: cover;
     border: 4px solid var(--color-accent);
     border-radius: 50%;
-    transition: transform 0.8s ease-out; 
-        display: block; 
+    transition: transform 0.8s ease-out;
+    display: block;
 }
 
 .player-initial-pos {
-    transform: translateX(-200%); 
+    transform: translateX(-200%);
 }
 
 .enemy-initial-pos {
-    transform: translateX(200%); 
+    transform: translateX(200%);
 }
 
 .combat-display .avatar-loaded {
@@ -291,11 +371,11 @@ header h2 {
 .inventory-item img {
     max-width: 100%;
     max-height: 100%;
-    transition: transform 0.3s ease-in-out; 
+    transition: transform 0.3s ease-in-out;
 }
 
 .inventory-item:hover img {
-    transform: scale(1.15); 
+    transform: scale(1.15);
 }
 
 
@@ -311,7 +391,6 @@ header h2 {
     justify-content: space-between;
     padding: 10px;
     background-color: #a1a29c;
-    border-radius: 5px;
     margin-bottom: 15px;
 }
 
@@ -330,13 +409,11 @@ header h2 {
     background-color: #a1a29c;
     padding: 10px;
     text-align: center;
-    border-radius: 8px;
     min-height: 380px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
     align-items: center;
-   
+
 }
 
 .basket-temp-item img {
@@ -349,7 +426,7 @@ header h2 {
 .btn-remove-basket {
     background-color: #e74c3c;
     color: white;
-   
+
 }
 
 .action-button.insufficient-gold {
@@ -359,5 +436,97 @@ header h2 {
 
 .product-item.dragging {
     opacity: 0.4;
-    border: 2px solid gold; 
+    border: 2px solid gold;
 }
+
+
+
+/* ========================================= */
+/* ------------- MONEDAS ------------------- */
+/* ========================================= */
+
+.div2{
+      display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.moneda-move {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    animation: move-square 5s ;
+}
+
+
+@keyframes move-square {
+    0% {
+        transform: translate(0, -130px);
+    }
+
+    25% {
+        transform: translate(0, 50px);
+    }
+
+    50% {
+        transform: translate(0, 50px);
+    }
+
+    75% {
+        transform: translate(0, 50px);
+    }
+
+    100% {
+        transform: translate(0, 50px);
+    }
+
+}
+
+
+.monedero{
+  width: 76px;
+  height: 76px;
+padding-right: 2%;
+padding-bottom: 1%;
+
+  animation:
+    move 5s linear normal ,
+    mirror 5s steps(1)  ;
+}
+
+@keyframes move {
+  0% { translate: -450px }
+  50% { translate: -300px }
+  100% { translate: -300px }
+}
+
+
+.rankingtabla{
+    border-radius: 10px;
+    background-color: #FFD700;
+}
+
+.tr2{
+    background-color: #f9f4c1;
+}
+
+.cabecera{
+    background-color: #e74c3c;
+}
+
+/* Escena 8: Ranking */
+.ranking-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.ranking-table thead {
+    position: sticky; /* Cabecera fija [cite: 62] */
+    top: 0;
+    background-color: var(--color-primary);
+}
+
+.ranking-table tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.1); /* Filas pares color diferente [cite: 62] */
+}
+

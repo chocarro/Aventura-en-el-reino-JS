@@ -1,24 +1,74 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aventura en el Reino de JS</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
     <main id="game-container">
+        <!--
+         <section id="escena-configuracion" class="scene active-scene"> 
+           
+            <form id="player-config-form" class="config-form">
+                
+                <div class="input-group">
+                    <label for="player-name">Nombre del Jugador:</label>
+                    <input type="text" id="player-name" required minlength="0" maxlength="15" value="Cazador">
+                    <p class="error-message" id="name-error"></p>
+                </div>
+
+                <div class="input-group">
+                    <label>Puntos de Estadística (15 Puntos disponibles):</label>
+                    <div class="stats-input-grid">
+                        
+                        <label for="base-attack">Ataque Base (Max 10):</label>
+                        <input type="number" id="base-attack" value="5" min="1" max="10">
+                        
+                        <label for="base-defense">Defensa Base (Max 5):</label>
+                        <input type="number" id="base-defense" value="5" min="1" max="5">
+                        
+                        <label for="base-life">Vida Base (Max 5):</label>
+                        <input type="number" id="base-life" value="5" min="1" max="5">
+                    </div>
+                    <p class="error-message" id="points-error">Puntos restantes: <span id="points-remaining">0</span></p>
+                </div>
+                
+            <button id="btn-continuar-inicio" class="action-button">Continuar</button>
+            </form>
+            
+        </section>
+   -->
+
+
+
 
         <section id="escena-inicio" class="scene active-scene">
+
+            <div class="div2">
+                <table>
+                    <td> <img class="moneda-move" src="imagenes/moneda.png">
+                    </td>
+                    <td> <img class="moneda-move" src="imagenes/moneda.png">
+                    </td>
+                    <td> <img class="moneda-move" src="imagenes/moneda.png">
+                    </td>
+                </table>
+            </div>
+
+
             <header>
                 <h2>Aventura en el Reino de JS: Inicio</h2>
             </header>
-            
+
             <div class="player-card">
                 <img id="inicio-avatar" src="imagenes/Personajes/1.png" alt="Avatar del Jugador">
                 <h3 id="inicio-nombre">Cazador</h3>
-                
+
                 <div class="stats-grid">
                     <div class="stat-box">Ataque: <span id="inicio-ataque">0</span></div>
                     <div class="stat-box">Defensa: <span id="inicio-defensa">0</span></div>
@@ -26,17 +76,17 @@
                     <div class="stat-box">Puntos: <span id="inicio-puntos">0</span></div>
                 </div>
             </div>
-            
+
             <button id="btn-continuar-inicio" class="action-button">Continuar</button>
         </section>
 
 
-    <section id="escena-mercado" class="scene hidden-scene">
+        <section id="escena-mercado" class="scene hidden-scene">
             <header>
                 <h2>Mercado Negro</h2>
                 <p id="mercado-descuento-info" class="descuento-mensaje">¡Aplicando descuentos del día!</p>
             </header>
-            
+
             <div class="market-info-bar">
                 <div class="gold-display">
                     Saldo (Oro): <strong id="mercado-oro">0</strong>
@@ -45,11 +95,11 @@
                     Total Cesta: <strong id="mercado-total-cesta">0.00€</strong>
                 </div>
             </div>
-            
+
             <div class="market-layout">
                 <div id="productos-grid" class="product-grid">
-                    </div>
-                
+                </div>
+
                 <div id="cesta-mercado" class="basket-temp-dropzone">
                     <p>Arrastra productos aquí</p>
                 </div>
@@ -63,11 +113,11 @@
             <header>
                 <h2>Estado Actualizado</h2>
             </header>
-            
+
             <div class="player-card">
                 <img id="estado-avatar" src="imagenes/Personajes/1.png" alt="Avatar del Jugador">
                 <h3 id="estado-nombre">Cazador</h3>
-                
+
                 <div class="stats-grid">
                     <div class="stat-box">Ataque: <span id="estado-ataque">0</span></div>
                     <div class="stat-box">Defensa: <span id="estado-defensa">0</span></div>
@@ -75,7 +125,7 @@
                     <div class="stat-box">Puntos: <span id="estado-puntos">0</span></div>
                 </div>
             </div>
-            
+
             <button id="btn-continuar-estado" class="action-button">¡A la Batalla!</button>
         </section>
 
@@ -86,8 +136,8 @@
             </header>
 
             <div id="enemigos-grid" class="enemy-grid">
-                </div>
-            
+            </div>
+
             <button id="btn-terminar-enemigos" class="action-button secondary">Volver al inicio</button>
         </section>
 
@@ -104,7 +154,7 @@
             </div>
 
             <div id="combate-log" class="combat-log">
-                </div>
+            </div>
 
             <div id="resultado-combate">
                 <p>Ganador: <span id="batalla-ganador">--</span></p>
@@ -116,31 +166,58 @@
 
 
         <section id="escena-final" class="scene hidden-scene">
+
+            <table class="rankingtabla">
+                <tr class="tr2">
+                    <td class="cabecera">NOMBRE</td>
+                    <td>Cazador</td>
+
+                </tr>
+                <tr class="tr2">
+                    <td class="cabecera">PUNTUACIÓN</td>
+                    <td>100 Puntos</td>
+
+                </tr>
+                <tr class="tr2">
+                    <td class="cabecera">MONEDAS TOTALES</td>
+                    <td>540 Monedas</td>
+
+                </tr>
+            </table>
             <header>
                 <h2>Resultado Final</h2>
             </header>
+
 
             <div class="final-summary">
                 <p id="final-rango-message">El jugador ha logrado ser un <strong id="final-rango">[Rango]</strong></p>
                 <p>Puntos totales: <strong id="final-puntos-totales">0</strong></p>
             </div>
-            
+
+
+            <!--BOTON RANKING-->
+            <button id="rankingAventura">RANKING</button>
+
             <button id="btn-reiniciar" class="action-button">Reiniciar</button>
+
         </section>
 
     </main>
     <footer id="inventory-basket">
-        <h3>Inventario</h3>
+
         <div id="cesta-grid" class="basket-grid">
             <p id="cesta-vacia-msg"> </p>
         </div>
+
+
     </footer>
 
-    
 
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.js"></script>
-    
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.js"></script>
+
     <script type="module" src="js/main.js"></script>
 
 </body>
+
 </html>

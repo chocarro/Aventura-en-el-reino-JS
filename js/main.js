@@ -20,11 +20,128 @@ let enemigosIniciales = [
 let enemigosRestantes = []; 
 let currentEnemy = null; 
 
-// --- MANEJO DEL DOM Y RENDERIZADO ---
 
-/**
- * Oculta todas las secciones con la clase 'scene'.
- */
+const maxpoints = 10;
+
+// ===========================================
+// LÓGICA DE VALIDACIÓN 
+// ===========================================
+
+
+function updateRemainingPoints() {
+    const attack = parseInt(document.getElementById('base-attack').value) || 0;
+    const defense = parseInt(document.getElementById('base-defense').value) || 0;
+    const life = parseInt(document.getElementById('base-life').value) || 0;
+    
+    const spent = attack + defense + life;
+    const remaining = maxpoints - spent;
+    
+    const pointsSpan = document.getElementById('points-remaining');
+    pointsSpan.textContent = remaining;
+    
+    const errorMsg = document.getElementById('points-error');
+    if (remaining < 0) {
+        pointsSpan.style.color = 'red';
+        errorMsg.textContent = `Puntos restantes: ${remaining} (Exceso)`;
+    } else if (remaining > 0) {
+        pointsSpan.style.color = 'orange';
+        errorMsg.textContent = `Puntos restantes: ${remaining} (Restan por usar)`;
+    } else {
+        pointsSpan.style.color = 'green';
+        errorMsg.textContent = `Puntos restantes: ${remaining} (OK)`;
+    }
+}
+
+function validateAndStart(e) {
+    e.preventDefault(); 
+
+    const nameInput = document.getElementById('player-name');
+    const attack = parseInt(document.getElementById('base-attack').value) || 0; 
+    const defense = parseInt(document.getElementById('base-defense').value) || 0;
+    const life = parseInt(document.getElementById('base-life').value) || 0;
+    
+    const name = nameInput.value.trim();
+    const totalPoints = attack + defense + life;
+    let isValid = true;
+    
+    if (name.length < 3 || name.length > 15) {
+        document.getElementById('name-error').textContent = 'El nombre debe tener entre 3 y 15 caracteres.';
+        isValid = false;
+    } else {
+        document.getElementById('name-error').textContent = '';
+    }
+        if (totalPoints !== maxpoints) {
+        isValid = false;
+    }
+
+    if (isValid) {
+        jugador = new Jugador(name, "imagenes/Personajes/1.png", 100); 
+        jugador.baseAttack = attack;
+        jugador.baseDefense = defense;
+        jugador.baseLifeBonus = life; 
+        
+        document.getElementById('inicio-nombre').textContent = name;
+        document.getElementById('estado-nombre').textContent = name;
+
+        goToInitialStats(); 
+    }
+}
+
+function goToInitialStats() {
+    renderPlayerStats('inicio-', false); 
+    
+    document.getElementById('inicio-nombre').textContent = jugador.name;
+
+    renderInventory();
+    showScene('escena-inicio'); 
+}
+
+
+// ===========================================
+//-- REGISTRO RANKING JUGADOR -- 
+// ===========================================
+
+
+function guardarRanking() {
+    if (!jugador) {
+        console.error("No hay jugador para guardar.");
+        return;
+    }
+
+    const newRecord = {
+        name: jugador.name,
+        points: jugador.points,
+        gold: jugador.gold,
+        date: new Date().toLocaleString()
+    };
+
+    let ranking = JSON.parse(localStorage.getItem('rankingAventura') || '[]');
+    ranking.push(newRecord);
+    ranking.sort((a, b) => b.points - a.points);
+    
+    localStorage.setItem('rankingAventura', JSON.stringify(ranking));
+    console.log(`Registro de ${jugador.name} guardado en el ranking.`);
+}
+
+
+function showRanking() {
+    const ranking = JSON.parse(localStorage.getItem('rankingAventura') || '[]');
+    
+    if (ranking.length === 0) {
+        console.log("El ranking está vacío.");
+        return;
+    }
+
+    ranking.forEach((record, index) => {
+        console.log(`#${index + 1} | Nombre: ${record.name} | Puntos: ${record.points} | Oro: ${record.gold} | Fecha: ${record.date}`);
+    });
+}         
+
+
+
+
+
+
 function hideAllScenes() {
     document.querySelectorAll('.scene').forEach(scene => {
         scene.classList.remove('active-scene');
@@ -69,23 +186,35 @@ function renderPlayerStats(prefix, fullLife = false) {
 }
 
 /**
- * Renderiza el inventario (cesta) en la parte inferior de la pantalla.
+ * @description Renderiza el inventario en el footer con al menos 6 celdas.
  */
 function renderInventory() {
     const cestaGrid = document.getElementById('cesta-grid');
+    if (!cestaGrid) return;
+
     cestaGrid.innerHTML = '';
     
-    if (jugador.inventory.length === 0) {
-        cestaGrid.innerHTML = '<p id="cesta-vacia-msg">Inventario vacío.</p>';
-        return;
+    const TOTAL_SLOTS = 6; // Mínimo de 6 celdas
+    const currentInventory = jugador.inventory;
+
+    for (let i = 0; i < TOTAL_SLOTS; i++) {
+        const slotDiv = document.createElement('div');
+        slotDiv.classList.add('inventory-item');
+
+        if (currentInventory[i]) {
+            // Celda con objeto real
+            const item = currentInventory[i];
+            slotDiv.innerHTML = `<img src="${item.image}" alt="${item.name}" title="${item.name} (+${item.bonus})">`;
+            slotDiv.style.borderStyle = 'solid'; // Cambiar a borde sólido si tiene item
+        } else {
+            // Celda vacía
+            slotDiv.innerHTML = ''; 
+        }
+
+        cestaGrid.appendChild(slotDiv);
     }
-        jugador.inventory.forEach(item => {
-        const itemDiv = document.createElement('div');
-        itemDiv.classList.add('inventory-item');
-        itemDiv.innerHTML = `<img src="${item.image}" alt="${item.name}" title="${item.name} (${item.bonus})">`;
-        cestaGrid.appendChild(itemDiv);
-    });
 }
+
 
 /**
  * Renderiza todos los productos disponibles en la escena de mercado.
@@ -265,20 +394,33 @@ function goToBatalla(enemyIndex) {
     
     if (winner === 'Jugador') {
         enemigosRestantes.splice(enemyIndex, 1);
-        jugador.addGold(50); 
+        jugador.addGold(5); 
     } 
     
     renderInventory();
 }
 
+
 function goToFinal() {
+
+    guardarRanking(); 
     const rank = distinguirJugador(jugador.points, UMBRAL_VETERANO);
     
     document.getElementById('final-rango').textContent = rank;
     document.getElementById('final-rango-message').textContent = 
         `El jugador ha logrado ser un ${rank}`;
+
     document.getElementById('final-puntos-totales').textContent = jugador.points;
     
+    const btnMostrarRanking = document.getElementById('btn-mostrar-ranking'); 
+     if (!btnMostrarRanking) {
+        console.error("El botón 'btn-mostrar-ranking' no existe en el DOM.");
+    } else {
+         btnMostrarRanking.removeEventListener('click', showRanking); 
+        btnMostrarRanking.addEventListener('click', showRanking); 
+        btnMostrarRanking.style.display = 'block'; 
+    }
+
     showScene('escena-final');
 
     if (typeof confetti === 'function') {
@@ -289,6 +431,8 @@ function goToFinal() {
         });
     }
 }
+
+
 
 /**
  * Decide a dónde ir después de una batalla.
@@ -344,7 +488,6 @@ function setupEventListeners() {
         }
     });
     
-    // Evento de RETIRAR del carrito temporal (delegación)
     cestaMercado.addEventListener('click', (e) => {
         const button = e.target;
         if (button.classList.contains('btn-remove-basket')) {
@@ -372,24 +515,33 @@ function setupEventListeners() {
     document.getElementById('btn-reiniciar').addEventListener('click', initializeGame); 
 }
 
+
+
+
 // --- INICIALIZACIÓN DEL JUEGO ---
 
 /**
  * @description Inicializa el juego al cargar el DOM.
  */
 function initializeGame() {
-    jugador = new Jugador("Cazador", "imagenes/9.png", 100, 500); 
+    jugador = new Jugador("Cazador", "imagenes/1.png", 100, 500); 
     productosDisponibles = obtenerListaProductos(); 
     productosEnCesta.clear(); 
     enemigosRestantes = []; 
     currentEnemy = null;
     
+    
     renderPlayerStats('inicio-', false);
     renderInventory();
     showScene('escena-inicio');
+
+    
+  // showScene('escena-configuracion');
+  //updateRemainingPoints();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners(); 
     initializeGame(); 
 });
+
