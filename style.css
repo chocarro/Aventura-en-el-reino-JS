@@ -11,22 +11,18 @@
 }
 
 /* ========================================= */
-/* BASE Y LAYOUT GENERAL */
+/* FUENTE Y CONFIGURACIÓN GLOBAL             */
 /* ========================================= */
 
+@import url('https://fonts.googleapis.com/css2?family=New+Rocker&display=swap');
+
 body,
-h1,
-h2,
-h3,
-h4,
-p,
-span,
-button,
-input {
+h1, h2, h3, h4,
+p, span, button,
+input, label, div {
     font-family: 'New Rocker', cursive !important;
 }
 
-/* Configuración Global */
 body {
     margin: 0;
     padding: 0;
@@ -34,55 +30,66 @@ body {
     width: 100vw;
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* Prohibido el scroll global */
-    background-color: var(--color-primary);
+    overflow: hidden;
+    background-image: url('imagenes/pattern_16x16.png');
+    background-repeat: repeat;
+    background-size: 16px 16px;
 }
 
-/* Header: 10vh */
-header {
-    height: 10vh;
+/* ========================================= */
+/* MARCOS IDENTICOS (HEADER Y FOOTER)        */
+/* ========================================= */
+
+header, 
+#inventory-basket {
+    background-color: var(--color-primary); 
+    color: var(--color-background);
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--color-primary);
-    border-bottom: 2px solid var(--color-background);
     box-sizing: border-box;
+    border-top: 2px solid var(--color-accent);
+    border-bottom: 2px solid var(--color-accent);
 }
 
-/* Contenido Principal (Main): 70vh */
+header {
+    height: 10vh;
+    border-top: none; 
+}
+
+header h2 {
+    margin: 0;
+    color: var(--color-background);
+}
+
+#inventory-basket {
+    height: 20vh;
+    border-bottom: none; 
+    flex-direction: column;
+    box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* ========================================= */
+/* CONTENIDO CENTRAL (MAIN)                  */
+/* ========================================= */
+
 #game-container {
     height: 70vh;
     width: 100%;
-    max-width: 1000px; /* Opcional: centrar contenido ancho */
+    max-width: 1000px;
     margin: 0 auto;
     padding: 20px;
     background-color: var(--color-secondary);
-    overflow-y: auto; /* Único lugar con scroll permitido */
+    overflow-y: auto; 
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    border-radius: 0; /* Estética SPA */
 }
 
-/* Footer (Inventario): 20vh */
-#inventory-basket {
-    height: 20vh;
-    width: 100%;
-    background-color: var(--color-primary);
-    color: var(--color-background);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.3);
-    border-top: 2px solid var(--color-accent);
-}
-
-/* Reajuste de la rejilla de inventario */
 .basket-grid {
     display: grid;
-    grid-template-columns: repeat(6, 60px); /* 6 celdas fijas */
+    grid-template-columns: repeat(6, 60px); 
     gap: 15px;
     padding: 10px;
 }
@@ -91,32 +98,10 @@ header {
     width: 60px;
     height: 60px;
     background-color: rgba(0, 0, 0, 0.2);
-    border: 2px dashed var(--color-accent); /* Estilo celda vacía */
+    border: 2px dashed var(--color-accent); 
     display: flex;
     align-items: center;
     justify-content: center;
-}
-#game-container {
-    width: 90%;
-    max-width: 800px;
-    background-color: var(--color-secondary);
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-    padding: 20px;
-    margin-top: 20px;
-    border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    max-height: calc(100vh - 40px);
-    min-height: 0;
-    overflow: hidden;
-}
-
-header h2 {
-    color: var(--color-background);
-    text-align: center;
-    border-bottom: 2px solid var(--color-background);
-    padding-bottom: 10px;
 }
 
 /* ========================================= */
@@ -231,7 +216,16 @@ header h2 {
 /* ESCENA DE MERCADO Y ENEMIGOS*/
 /* ========================================= */
 
-.product-grid,
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
+    gap: 15px;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    overflow-y: auto;
+    max-height: 500px; 
+}
 .enemy-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -441,92 +435,192 @@ header h2 {
 
 
 
-/* ========================================= */
-/* ------------- MONEDAS ------------------- */
-/* ========================================= */
 
-.div2{
-      display: flex;
-    align-items: center;
-    justify-content: space-around;
-}
+/*ANIMACION RANKING*/
 
-.moneda-move {
-    width: 100px;
-    height: 100px;
-    display: flex;
-    animation: move-square 5s ;
-}
-
-
-@keyframes move-square {
-    0% {
-        transform: translate(0, -130px);
-    }
-
-    25% {
-        transform: translate(0, 50px);
-    }
-
-    50% {
-        transform: translate(0, 50px);
-    }
-
-    75% {
-        transform: translate(0, 50px);
-    }
-
-    100% {
-        transform: translate(0, 50px);
-    }
-
-}
-
-
-.monedero{
-  width: 76px;
-  height: 76px;
-padding-right: 2%;
-padding-bottom: 1%;
-
-  animation:
-    move 5s linear normal ,
-    mirror 5s steps(1)  ;
-}
-
-@keyframes move {
-  0% { translate: -450px }
-  50% { translate: -300px }
-  100% { translate: -300px }
-}
-
-
-.rankingtabla{
-    border-radius: 10px;
-    background-color: #FFD700;
-}
-
-.tr2{
-    background-color: #f9f4c1;
-}
-
-.cabecera{
-    background-color: #e74c3c;
-}
-
-/* Escena 8: Ranking */
 .ranking-table {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 15px;
+    background-color: #f9f4c1; 
+    color: #333;
+}
+
+.ranking-table th, .ranking-table td {
+    border: 1px solid #784A22;
+    padding: 8px;
+    text-align: center;
 }
 
 .ranking-table thead {
-    position: sticky; /* Cabecera fija [cite: 62] */
+    background-color: #FFD700;
+}
+
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.form-group input {
+    padding: 10px;align-self: start;
+    font-size: 1.2em;
+    border: 2px solid var(--color-primary);
+    border-radius: 4px;
+}
+
+.avatar-options {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.avatar-option {
+    width: 80px;
+    height: 80px;
+    cursor: pointer;
+    border: 4px solid transparent;
+    border-radius: 50%;
+    transition: transform 0.2s;
+    background-color: var(--color-secondary);
+}
+
+.avatar-option:hover {
+    transform: scale(1.1);
+}
+
+.avatar-option.selected {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 10px var(--color-accent);
+}
+
+.stat-input {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    width: 100%;
+}
+.stat-input input {
+    width: 80px;
+    padding: 5px;
+    font-family: 'New Rocker', cursive;
+}
+
+.stats-creation {
+    background: rgba(0,0,0,0.05);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+
+
+
+
+
+
+
+
+
+
+/* --- CONTENEDOR DEL MONEDERO --- */
+.monedero {
+    position: fixed;
+    bottom: 1vh; 
+    left: 2vw;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px; 
+    height: 80px;
+}
+
+.monedero img {
+    width: 100%;
+    height: auto;
+    animation: balanceo-saco 3s ease-in-out infinite;
+}
+
+#oro-display {
+    position: absolute;
+    top: 55%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #000; 
+    pointer-events: none;
+    z-index: 1001;
+}
+
+/* --- ANIMACIONES --- */
+
+@keyframes entrada-suave {
+    0% {
+        transform: translateX(-150%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+
+
+
+
+/* --- ANIMACIÓN DE MONEDAS (VICTORIA) --- */
+.div2 {
+    display: none; 
+    position: fixed;
     top: 0;
-    background-color: var(--color-primary);
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 2000;
+    pointer-events: none;
+    perspective: 1000px;
 }
 
-.ranking-table tr:nth-child(even) {
-    background-color: rgba(255, 255, 255, 0.1); /* Filas pares color diferente [cite: 62] */
+.monedas-activas {
+    display: block !important; 
 }
 
+.moneda-move {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    top: -100px; 
+    animation: victoria-monedas 4s linear forwards;
+}
+
+.m1 { left: 25%; }
+.m2 { left: 50%; transform: translateX(-50%); }
+.m3 { left: 75%; transform: translateX(-100%); }
+
+@keyframes victoria-monedas {
+    0% {
+        top: -100px;
+        opacity: 0;
+        transform: rotateY(0deg);
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        top: 50vh; 
+        opacity: 0; 
+        transform: rotateY(720deg); 
+    }
+}
