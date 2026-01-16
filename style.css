@@ -17,9 +17,16 @@
 @import url('https://fonts.googleapis.com/css2?family=New+Rocker&display=swap');
 
 body,
-h1, h2, h3, h4,
-p, span, button,
-input, label, div {
+h1,
+h2,
+h3,
+h4,
+p,
+span,
+button,
+input,
+label,
+div {
     font-family: 'New Rocker', cursive !important;
 }
 
@@ -40,9 +47,9 @@ body {
 /* MARCOS IDENTICOS (HEADER Y FOOTER)        */
 /* ========================================= */
 
-header, 
+header,
 #inventory-basket {
-    background-color: var(--color-primary); 
+    background-color: var(--color-primary);
     color: var(--color-background);
     width: 100%;
     display: flex;
@@ -55,7 +62,7 @@ header,
 
 header {
     height: 10vh;
-    border-top: none; 
+    border-top: none;
 }
 
 header h2 {
@@ -65,7 +72,7 @@ header h2 {
 
 #inventory-basket {
     height: 20vh;
-    border-bottom: none; 
+    border-bottom: none;
     flex-direction: column;
     box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.3);
 }
@@ -81,7 +88,7 @@ header h2 {
     margin: 0 auto;
     padding: 20px;
     background-color: var(--color-secondary);
-    overflow-y: auto; 
+    overflow-y: auto;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -89,7 +96,7 @@ header h2 {
 
 .basket-grid {
     display: grid;
-    grid-template-columns: repeat(6, 60px); 
+    grid-template-columns: repeat(6, 60px);
     gap: 15px;
     padding: 10px;
 }
@@ -98,7 +105,7 @@ header h2 {
     width: 60px;
     height: 60px;
     background-color: rgba(0, 0, 0, 0.2);
-    border: 2px dashed var(--color-accent); 
+    border: 2px dashed var(--color-accent);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -218,14 +225,15 @@ header h2 {
 
 .product-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 15px;
     padding: 15px;
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 8px;
     overflow-y: auto;
-    max-height: 500px; 
+    max-height: 500px;
 }
+
 .enemy-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -442,11 +450,12 @@ header h2 {
     width: 100%;
     border-collapse: collapse;
     margin-top: 15px;
-    background-color: #f9f4c1; 
+    background-color: #f9f4c1;
     color: #333;
 }
 
-.ranking-table th, .ranking-table td {
+.ranking-table th,
+.ranking-table td {
     border: 1px solid #784A22;
     padding: 8px;
     text-align: center;
@@ -466,7 +475,8 @@ header h2 {
 }
 
 .form-group input {
-    padding: 10px;align-self: start;
+    padding: 10px;
+    align-self: start;
     font-size: 1.2em;
     border: 2px solid var(--color-primary);
     border-radius: 4px;
@@ -505,6 +515,7 @@ header h2 {
     margin-bottom: 10px;
     width: 100%;
 }
+
 .stat-input input {
     width: 80px;
     padding: 5px;
@@ -512,7 +523,7 @@ header h2 {
 }
 
 .stats-creation {
-    background: rgba(0,0,0,0.05);
+    background: rgba(0, 0, 0, 0.05);
     padding: 15px;
     border-radius: 8px;
     margin-bottom: 15px;
@@ -521,24 +532,16 @@ header h2 {
 
 
 
-
-
-
-
-
-
-
-
 /* --- CONTENEDOR DEL MONEDERO --- */
 .monedero {
     position: fixed;
-    bottom: 1vh; 
+    bottom: 1vh;
     left: 2vw;
     z-index: 1000;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 80px; 
+    width: 80px;
     height: 80px;
 }
 
@@ -550,12 +553,12 @@ header h2 {
 
 #oro-display {
     position: absolute;
-    top: 55%; 
+    top: 55%;
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 1.1rem;
     font-weight: bold;
-    color: #000; 
+    color: #000;
     pointer-events: none;
     z-index: 1001;
 }
@@ -567,6 +570,7 @@ header h2 {
         transform: translateX(-150%);
         opacity: 0;
     }
+
     100% {
         transform: translateX(0);
         opacity: 1;
@@ -579,7 +583,7 @@ header h2 {
 
 /* --- ANIMACIÓN DE MONEDAS (VICTORIA) --- */
 .div2 {
-    display: none; 
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
@@ -591,20 +595,30 @@ header h2 {
 }
 
 .monedas-activas {
-    display: block !important; 
+    display: block !important;
 }
 
 .moneda-move {
     position: absolute;
     width: 60px;
     height: 60px;
-    top: -100px; 
+    top: -100px;
     animation: victoria-monedas 4s linear forwards;
 }
 
-.m1 { left: 25%; }
-.m2 { left: 50%; transform: translateX(-50%); }
-.m3 { left: 75%; transform: translateX(-100%); }
+.m1 {
+    left: 25%;
+}
+
+.m2 {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.m3 {
+    left: 75%;
+    transform: translateX(-100%);
+}
 
 @keyframes victoria-monedas {
     0% {
@@ -612,15 +626,81 @@ header h2 {
         opacity: 0;
         transform: rotateY(0deg);
     }
+
     10% {
         opacity: 1;
     }
+
     90% {
         opacity: 1;
     }
+
     100% {
-        top: 50vh; 
-        opacity: 0; 
-        transform: rotateY(720deg); 
+        top: 50vh;
+        opacity: 0;
+        transform: rotateY(720deg);
     }
+}
+
+
+/*ESTRELLAS*/
+
+#stars-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+    z-index: 9999;
+}
+
+.star {
+    width: 30px;
+    height: 30px;
+    background-color: #FFD700;
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    animation: spin 3s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/*TOP SECRET*/
+
+#panel {
+    position: fixed;
+    bottom: 0;
+    right: 2vw;
+    width: 150px;
+    color: #000;
+    background-color: #ecede3;
+    border: 2px solid #ffd000;
+    border-radius: 8px;
+    transform: translateY(calc(100% - 50px));
+    transition: transform 0.5s ease-in-out; 
+}
+
+#panel h3 {
+    margin: 0;
+    padding: 10px;
+    background-color: #ecede3;
+    cursor: pointer;
+}
+
+#panel p {
+    margin: 10px 0;
+    padding: 10px;
+    font-weight: bold;
+}
+
+#panel:hover {
+    transform: translateY(0);
 }
